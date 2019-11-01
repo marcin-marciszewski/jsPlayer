@@ -4,30 +4,24 @@ const TrackBar = (_ => {
         currentTrackTime: 0,
         fullTrackTime: 0,
         fillWidth: 0
+
+
     }
 
     const trackBarFillEl = document.querySelector(".track-bar__fill");
     const durationEl = document.querySelector(".duration");
     const timeLeftEl = document.querySelector(".time-left");
 
+
+
+
     const init = _ => {
         render();
     }
 
-    const render = _ => {
-        trackBarFillEl.style.width = `${state.fillWidth}%`
 
-        if (!state.fullTrackTime) {
-            durationEl.innerHTML = `0:00`
-        } else {
-            durationEl.innerHTML = `${Math.floor(state.fullTrackTime / 60)}:${Math.floor(state.fullTrackTime % 60)}`;
-        }
-
-        if (!state.currentTrackTime) {
-            timeLeftEl.innerHTML = `0:00`
-        } else {
-            time(state.currentTrackTime);
-        }
+    const getPercent = (current, full) => {
+        return (current / full) * 100;
     }
 
     const time = (input) => {
@@ -43,8 +37,23 @@ const TrackBar = (_ => {
         }
     }
 
-    const getPercent = (current, full) => {
-        return (current / full) * 100;
+
+    const render = _ => {
+        trackBarFillEl.style.width = `${state.fillWidth}%`;
+
+        if (!state.fullTrackTime) {
+            durationEl.innerHTML = `0:00`
+        } else {
+            durationEl.innerHTML = `${Math.floor(state.fullTrackTime / 60)}:${Math.floor(state.fullTrackTime % 60)}`;
+        }
+
+        if (!state.currentTrackTime) {
+            timeLeftEl.innerHTML = `0:00`
+        } else {
+            time(state.currentTrackTime);
+        }
+
+
     }
 
     const setState = obj => {
@@ -54,10 +63,15 @@ const TrackBar = (_ => {
         render();
     }
 
+
+
+
     return {
         init,
         setState
+
     }
+
 })();
 
 export default TrackBar;

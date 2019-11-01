@@ -10,7 +10,7 @@ const PlayInfo = (_ => {
     //cache the DOM
     const playerCountEl = document.querySelector(".player__count");
     const playerTriggerEl = document.querySelector(".player__trigger");
-
+    const playEl = document.querySelector(".play");
 
     const init = _ => {
         render();
@@ -19,6 +19,12 @@ const PlayInfo = (_ => {
 
     const listeners = _ => {
         playerTriggerEl.addEventListener("click", _ => {
+            state.isPlaying = state.isPlaying ? false : true;
+            render();
+            Playlist.flip();
+        })
+
+        playEl.addEventListener("click", _ => {
             state.isPlaying = state.isPlaying ? false : true;
             render();
             Playlist.flip();
