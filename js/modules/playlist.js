@@ -18,8 +18,6 @@ const Playlist = (_ => {
     const forwardEl = document.querySelector(".forward");
     const backwardEl = document.querySelector(".backward");
 
-
-
     const init = _ => {
         render();
         listeners();
@@ -49,7 +47,6 @@ const Playlist = (_ => {
             currentlyPlayingIndex = clickedIndex;
             changeAudioSrc();
             togglePlayPause();
-
         }
 
         PlayInfo.setState({
@@ -136,7 +133,6 @@ const Playlist = (_ => {
             playBack()
         })
 
-
     }
     const render = _ => {
         let markup = '';
@@ -148,6 +144,7 @@ const Playlist = (_ => {
                 return 'fas fa-music';
             }
         }
+
         songs.forEach((songObj, index) => {
             markup += `
                 <li class="playlist__song ${index === currentlyPlayingIndex && !currentSong.paused ?'playlist__song--active': ''}">
@@ -164,11 +161,8 @@ const Playlist = (_ => {
                     </div>
                 </li>
             `;
-
-
         })
         playlistEl.innerHTML = markup;
-
     }
 
     return {

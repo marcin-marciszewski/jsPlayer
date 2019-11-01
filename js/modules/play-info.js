@@ -48,8 +48,6 @@ const PlayInfo = (_ => {
         playerCountEl.innerHTML = state.songsLength;
         playerTriggerEl.innerHTML = state.isPlaying ? "Pause" : "Play";
         playEl.innerHTML = `<i class="far ${toggleIcon()} fa-3x "></i>`
-
-
     }
 
     return {
