@@ -1,19 +1,24 @@
 import {
     songsList
-} from '../data/songs.js';
+} from "../data/songs.js";
 
 import PlayInfo from './play-info.js'
 import TrackBar from './track-bar.js'
 
 const Playlist = (_ => {
-    // data
+    // data 
     let songs = songsList;
     let currentlyPlayingIndex = 0;
     let currentSong = new Audio(songs[currentlyPlayingIndex].url);
-    currentSong.currentTime = 250;
+    currentSong.currentTime = 0;
 
     // cache the DOM
     const playlistEl = document.querySelector(".playlist");
+    const trackBarEl = document.querySelector(".track-bar");
+    const forwardEl = document.querySelector(".forward");
+    const backwardEl = document.querySelector(".backward");
+
+
 
     const init = _ => {
         render();
@@ -22,7 +27,6 @@ const Playlist = (_ => {
             songsLength: songs.length,
             isPlaying: !currentSong.paused
         })
-
     }
 
     const flip = _ => {
@@ -30,23 +34,22 @@ const Playlist = (_ => {
         render();
     }
 
-    const changeAudioSrc = _ => {
-        currentSong.src = songs[currentlyPlayingIndex].url;
-    }
-
     const togglePlayPause = _ => {
         return currentSong.paused ? currentSong.play() : currentSong.pause();
     }
 
+    const changeAudioSrc = _ => {
+        currentSong.src = songs[currentlyPlayingIndex].url;
+    }
+
     const mainPlay = clickedIndex => {
         if (currentlyPlayingIndex === clickedIndex) {
-            console.log("same");
             togglePlayPause();
         } else {
-            console.log("new");
             currentlyPlayingIndex = clickedIndex;
             changeAudioSrc();
             togglePlayPause();
+
         }
 
         PlayInfo.setState({
@@ -55,13 +58,21 @@ const Playlist = (_ => {
         })
     }
 
+    const playBack = _ => {
+        if (songs[currentlyPlayingIndex - 1]) {
+            currentlyPlayingIndex--;
+            changeAudioSrc();
+            togglePlayPause();
+            render();
+        }
+    }
+
     const playNext = _ => {
         if (songs[currentlyPlayingIndex + 1]) {
             currentlyPlayingIndex++;
             changeAudioSrc();
             togglePlayPause();
             render();
-
         }
     }
 
@@ -70,11 +81,10 @@ const Playlist = (_ => {
             if (event.target && event.target.matches(".fa")) {
                 const listElem = event.target.parentNode.parentNode;
                 const listElemIndex = [...listElem.parentElement.children].indexOf(listElem);
-                console.log(listElemIndex);
                 mainPlay(listElemIndex);
                 render();
-            }
 
+            }
         })
 
         playlistEl.addEventListener("mousemove", event => {
@@ -112,8 +122,22 @@ const Playlist = (_ => {
         currentSong.addEventListener("ended", _ => {
             playNext();
         })
-    }
 
+        trackBarEl.addEventListener("click", (event) => {
+            const position = Math.floor((event.offsetX / event.target.offsetWidth) * 100);
+            currentSong.currentTime = Math.floor((currentSong.duration * position) / 100);
+        })
+
+        forwardEl.addEventListener("click", _ => {
+            playNext()
+        })
+
+        backwardEl.addEventListener("click", _ => {
+            playBack()
+        })
+
+
+    }
     const render = _ => {
         let markup = '';
 
@@ -121,33 +145,36 @@ const Playlist = (_ => {
             if (currentlyPlayingIndex === itemIndex) {
                 return currentSong.paused ? 'fa-play' : 'fa-pause';
             } else {
-                return 'fa-play';
+                return 'fas fa-music';
             }
         }
-
         songs.forEach((songObj, index) => {
             markup += `
-            <li class="playlist__song ${index === currentlyPlayingIndex ? 'playlist__song--active': ''}">
-                <div class="play-pause">
-                    <i class="fa ${toggleIcon(index)} pp-icon"></i>
-                </div>
-                <div class="playlist__song-details">
-                    <span class="playlist__song-name">${songObj.title}</span>
-                    <br>
-                    <span class="playlist__song-artist">${songObj.artist}</span>
-                </div>
-                <div class="playlist__song-duration">
-                ${songObj.time}
-                </div>
-            </li>
+                <li class="playlist__song ${index === currentlyPlayingIndex && !currentSong.paused ?'playlist__song--active': ''}">
+                    <div class="play-pause">
+                        <i class="fa ${toggleIcon(index)} pp-icon"></i>
+                    </div>
+                    <div class="playlist__song-details">
+                        <span class="playlist__song-name off">${songObj.title}</span>
+                        <br>
+                        <span class="playlist__song-artist off">${songObj.artist}</span>
+                    </div>
+                    <div class="playlist__song-duration">
+                    ${songObj.time}
+                    </div>
+                </li>
             `;
-        })
 
+
+        })
         playlistEl.innerHTML = markup;
+
     }
+
     return {
         init,
-        flip
+        flip,
+        currentSong
     }
 })();
 
