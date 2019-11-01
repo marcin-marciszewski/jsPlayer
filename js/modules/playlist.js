@@ -77,6 +77,34 @@ const Playlist = (_ => {
 
         })
 
+        playlistEl.addEventListener("mousemove", event => {
+            if (event.target.matches("li") && !event.target.childNodes[1].children[0].classList.contains("fa-pause")) {
+                const icon = event.target.childNodes[1].children[0];
+                icon.classList.add("fa-play");
+            } else if (event.target.matches("i") && !event.target.classList.contains("fa-pause")) {
+                const icon = event.target;
+                icon.classList.add("fa-play");
+            } else if (event.target.matches(".off") && !event.target.parentElement.parentElement.childNodes[1].children[0].classList.contains("fa-pause")) {
+                const icon = event.target.parentElement.parentElement.childNodes[1].children[0];
+                icon.classList.add("fa-play");
+            } else if (event.target.matches(".play-pause") && !event.target.children[0].classList.contains("fa-pause")) {
+                const icon = event.target.children[0];
+                icon.classList.add("fa-play");
+            }
+        })
+
+        playlistEl.addEventListener("mouseout", event => {
+            if (event.target.matches("li")) {
+                const icon = event.target.childNodes[1].children[0];
+                icon.classList.remove("fa-play");
+                icon.classList.add("fa-music");
+            } else if (event.target.matches("i")) {
+                const icon = event.target;
+                icon.classList.remove("fa-play");
+                icon.classList.add("fa-music");
+            }
+        })
+
         currentSong.addEventListener("timeupdate", _ => {
             TrackBar.setState(currentSong);
         })
