@@ -1,4 +1,4 @@
-import Playlist from './playlist.js'
+import Playlist from "./playlist.js"
 
 const PlayInfo = (_ => {
 
@@ -7,7 +7,6 @@ const PlayInfo = (_ => {
         isPlaying: false
     }
 
-    //cache the DOM
     const playerCountEl = document.querySelector(".player__count");
     const playerTriggerEl = document.querySelector(".player__trigger");
     const playEl = document.querySelector(".play");
@@ -30,6 +29,7 @@ const PlayInfo = (_ => {
             Playlist.flip();
         })
     }
+
     const setState = obj => {
         state.songsLength = obj.songsLength;
         state.isPlaying = obj.isPlaying;
@@ -37,12 +37,24 @@ const PlayInfo = (_ => {
     }
 
     const render = _ => {
+        const toggleIcon = itemIndex => {
+            if (state.isPlaying) {
+                return "fa-pause-circle";
+            } else {
+                return 'fa-play-circle';
+            }
+        }
+
         playerCountEl.innerHTML = state.songsLength;
         playerTriggerEl.innerHTML = state.isPlaying ? "Pause" : "Play";
+        playEl.innerHTML = `<i class="far ${toggleIcon()} fa-3x "></i>`
+
+
     }
+
     return {
         init,
-        setState
+        setState,
     }
 })();
 
